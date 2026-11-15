@@ -1,0 +1,1199 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portofolio Interaktif | CSS Native</title>
+  <style>
+    /* =========================================
+        1. VARIABEL CSS NATIVE & RESET
+       ========================================= */
+    :root {
+      --bg-color: #0f172a;
+      --surface-color: #1e293b;
+      --surface-hover: #334155;
+      --primary-color: #38bdf8;
+      --primary-hover: #0284c7;
+      --accent-green: #10b981;
+      --accent-red: #ef4444;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border-color: #334155;
+      --font-main: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: var(--font-main);
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      line-height: 1.6;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    ul {
+      list-style: none;
+    }
+
+    /* =========================================
+       2. NAVIGASI (HEADER) & MODE EDIT TOGGLE
+       ========================================= */
+    header {
+      background-color: rgba(15, 23, 42, 0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-color);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .navbar {
+      max-width: 1150px;
+      margin: 0 auto;
+      padding: 1rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--primary-color);
+      letter-spacing: 0.5px;
+      cursor: pointer;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+    }
+
+    .nav-links button {
+      background: none;
+      border: none;
+      font-family: inherit;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 0.4rem 0.2rem;
+      transition: var(--transition);
+      border-bottom: 2px solid transparent;
+    }
+
+    .nav-links button:hover,
+    .nav-links button.active {
+      color: var(--primary-color);
+      border-bottom: 2px solid var(--primary-color);
+    }
+
+    .edit-controls {
+      display: flex;
+      gap: 0.6rem;
+      align-items: center;
+    }
+
+    /* =========================================
+       3. TOMBOL & KOMPONEN UMUM
+       ========================================= */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      background-color: var(--primary-color);
+      color: #0f172a;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: var(--transition);
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      background-color: var(--primary-hover);
+      color: #fff;
+      transform: translateY(-2px);
+    }
+
+    .btn-sm {
+      padding: 0.45rem 0.9rem;
+      font-size: 0.85rem;
+      border-radius: 6px;
+    }
+
+    .btn-outline {
+      background-color: transparent;
+      border: 1px solid var(--primary-color);
+      color: var(--primary-color);
+    }
+
+    .btn-outline:hover {
+      background-color: var(--primary-color);
+      color: #0f172a;
+    }
+
+    .btn-danger {
+      background-color: rgba(239, 68, 68, 0.15);
+      color: var(--accent-red);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    .btn-danger:hover {
+      background-color: var(--accent-red);
+      color: #fff;
+    }
+
+    /* =========================================
+       4. LAYOUT HALAMAN (SPA 5 HALAMAN)
+       ========================================= */
+    main {
+      flex: 1;
+      max-width: 1150px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 3rem 1.5rem;
+    }
+
+    .page-section {
+      display: none;
+      animation: fadeIn 0.35s ease;
+    }
+
+    .page-section.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 2.5rem;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 1.2rem;
+    }
+
+    .page-title {
+      font-size: 2.4rem;
+      line-height: 1.2;
+    }
+
+    .page-subtitle {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      margin-top: 0.4rem;
+    }
+
+    .highlight {
+      color: var(--primary-color);
+    }
+
+    /* =========================================
+       5. FORM INPUT PANEL (MODE EDIT)
+       ========================================= */
+    .edit-panel {
+      display: none;
+      background-color: var(--surface-color);
+      border: 1px dashed var(--primary-color);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2.5rem;
+      box-shadow: var(--shadow);
+    }
+
+    body.edit-mode .edit-panel {
+      display: block;
+    }
+
+    body.edit-mode .delete-btn-wrapper {
+      display: inline-flex;
+    }
+
+    .delete-btn-wrapper {
+      display: none;
+    }
+
+    .edit-panel h3 {
+      color: var(--primary-color);
+      margin-bottom: 1rem;
+      font-size: 1.15rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.4rem;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 0.7rem 0.9rem;
+      background-color: var(--bg-color);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      color: var(--text-main);
+      font-family: inherit;
+      font-size: 0.95rem;
+      transition: var(--transition);
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15);
+    }
+
+    /* =========================================
+       6. HALAMAN 1: BERANDA (HERO)
+       ========================================= */
+    .hero {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 60vh;
+      gap: 3rem;
+    }
+
+    .hero-content {
+      max-width: 620px;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      background-color: rgba(56, 189, 248, 0.12);
+      color: var(--primary-color);
+      padding: 0.4rem 1rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 1.2rem;
+    }
+
+    .hero h1 {
+      font-size: 3.3rem;
+      line-height: 1.15;
+      margin-bottom: 1.2rem;
+    }
+
+    .hero p {
+      color: var(--text-muted);
+      font-size: 1.15rem;
+      margin-bottom: 2rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .hero-visual {
+      width: 280px;
+      height: 280px;
+      flex-shrink: 0;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary-color), #818cf8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 4.5rem;
+      font-weight: 800;
+      color: var(--bg-color);
+      box-shadow: 0 20px 50px rgba(56, 189, 248, 0.25);
+      user-select: none;
+    }
+
+    /* =========================================
+       7. HALAMAN 2: TENTANG & KEAHLIAN
+       ========================================= */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 3rem;
+    }
+
+    .bio-box {
+      background-color: var(--surface-color);
+      padding: 2rem;
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+    }
+
+    .bio-box p {
+      color: var(--text-muted);
+      margin-bottom: 1.2rem;
+      white-space: pre-line;
+    }
+
+    .skills-container {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+
+    .skill-item {
+      background-color: var(--surface-color);
+      padding: 1rem 1.2rem;
+      border-radius: 10px;
+      border: 1px solid var(--border-color);
+    }
+
+    .skill-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      background-color: var(--bg-color);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .progress {
+      height: 100%;
+      background-color: var(--primary-color);
+      border-radius: 4px;
+      transition: width 0.5s ease;
+    }
+
+    /* =========================================
+       8. HALAMAN 3: PROYEK (DENGAN GAMBAR)
+       ========================================= */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+      gap: 1.8rem;
+    }
+
+    .card {
+      background-color: var(--surface-color);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: var(--transition);
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      border-color: var(--primary-color);
+      box-shadow: var(--shadow);
+    }
+
+    .card-banner {
+      height: 180px;
+      background-color: #111827;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .card-banner img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    .card:hover .card-banner img {
+      transform: scale(1.05);
+    }
+
+    .card-body {
+      padding: 1.5rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card-body h3 {
+      margin-bottom: 0.6rem;
+      font-size: 1.25rem;
+    }
+
+    .card-body p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-bottom: 1.2rem;
+      flex: 1;
+    }
+
+    .tags {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
+
+    .tag {
+      background-color: rgba(56, 189, 248, 0.12);
+      color: var(--primary-color);
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.3rem 0.7rem;
+      border-radius: 6px;
+    }
+
+    .card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 0.8rem;
+      border-top: 1px solid var(--border-color);
+    }
+
+    /* =========================================
+       9. HALAMAN 4: LAYANAN
+       ========================================= */
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .service-box {
+      background-color: var(--surface-color);
+      padding: 1.8rem;
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .service-box h3 {
+      color: var(--primary-color);
+      margin-bottom: 0.8rem;
+    }
+
+    .service-box p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    /* =========================================
+       10. HALAMAN 5: KONTAK & KOTAK PESAN
+       ========================================= */
+    .contact-wrapper {
+      display: grid;
+      grid-template-columns: 1fr 1.4fr;
+      gap: 2.5rem;
+    }
+
+    .contact-card {
+      background-color: var(--surface-color);
+      padding: 1.8rem;
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+      margin-bottom: 1.5rem;
+    }
+
+    .contact-info-item {
+      margin-bottom: 1.2rem;
+    }
+
+    .contact-info-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .contact-info-item h4 {
+      color: var(--primary-color);
+      font-size: 0.9rem;
+      margin-bottom: 0.2rem;
+    }
+
+    .message-list {
+      margin-top: 2rem;
+    }
+
+    .message-item {
+      background-color: var(--surface-color);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 1.2rem;
+      margin-bottom: 1rem;
+    }
+
+    .message-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      color: var(--primary-color);
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+
+    /* =========================================
+       11. TOAST NOTIFIKASI & FOOTER
+       ========================================= */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background-color: var(--accent-green);
+      color: #fff;
+      padding: 0.9rem 1.4rem;
+      border-radius: 10px;
+      font-weight: 600;
+      box-shadow: var(--shadow);
+      transform: translateY(120px);
+      opacity: 0;
+      transition: var(--transition);
+      z-index: 999;
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    footer {
+      text-align: center;
+      padding: 1.8rem;
+      border-top: 1px solid var(--border-color);
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    /* =========================================
+       12. RESPONSIVE DESIGN
+       ========================================= */
+    @media (max-width: 768px) {
+      .navbar {
+        flex-direction: column;
+        align-items: stretch;
+        text-align: center;
+      }
+      .nav-links {
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 0.8rem;
+      }
+      .edit-controls {
+        justify-content: center;
+      }
+      .hero {
+        flex-direction: column-reverse;
+        text-align: center;
+        min-height: auto;
+        padding-top: 1rem;
+      }
+      .hero h1 {
+        font-size: 2.3rem;
+      }
+      .hero-actions {
+        justify-content: center;
+      }
+      .hero-visual {
+        width: 200px;
+        height: 200px;
+        font-size: 3.2rem;
+      }
+      .about-grid,
+      .contact-wrapper {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVIGASI UTAMA -->
+  <header>
+    <nav class="navbar">
+      <div class="logo" onclick="navigateTo('beranda')" id="nav-logo">Lia.Kitchen</div>
+      
+      <ul class="nav-links">
+        <li><button class="nav-btn active" data-target="beranda" onclick="navigateTo('beranda')">Beranda</button></li>
+        <li><button class="nav-btn" data-target="tentang" onclick="navigateTo('tentang')">Tentang</button></li>
+        <li><button class="nav-btn" data-target="proyek" onclick="navigateTo('proyek')">Proyek</button></li>
+        <li><button class="nav-btn" data-target="layanan" onclick="navigateTo('layanan')">Layanan</button></li>
+        <li><button class="nav-btn" data-target="kontak" onclick="navigateTo('kontak')">Kontak</button></li>
+      </ul>
+
+      <div class="edit-controls">
+        <button id="toggle-edit-btn" class="btn btn-sm btn-outline" onclick="toggleEditMode()">✏️ Mode Input Data</button>
+        <button class="btn btn-sm btn-danger" onclick="resetDefaultData()" title="Kembalikan data awal">Reset</button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <!-- HALAMAN 1: BERANDA -->
+    <section id="page-beranda" class="page-section active">
+      <div class="edit-panel">
+        <h3>✏️ Edit Profil Beranda</h3>
+        <form onsubmit="saveHeroData(event)">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Nama Brand / Logo</label>
+              <input type="text" id="input-logo" required>
+            </div>
+            <div class="form-group">
+              <label>Nama / informasi pribadi</label>
+              <input type="text" id="input-name" required>
+            </div>
+            <div class="form-group">
+              <label>Status / Badge</label>
+              <input type="text" id="input-badge" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Deskripsi Singkat (Tagline)</label>
+            <textarea id="input-tagline" rows="2" required></textarea>
+          </div>
+          <button type="submit" class="btn btn-sm">Simpan Perubahan Beranda</button>
+        </form>
+      </div>
+
+      <div class="hero">
+        <div class="hero-content">
+          <span class="hero-badge" id="display-badge">Kreator Konten Kuliner & Home Cook</span>
+          <h1>Halo, Saya <span class="highlight" id="display-name">Lia Sihombing</span>.</h1>
+          <p id="display-tagline">Seorang pencinta kuliner dan home cook yang berfokus menyajikan resep lezat, mudah dipraktikkan, dan penuh cita rasa autentik.</p>
+          <div class="hero-actions">
+            <button class="btn" onclick="navigateTo('proyek')">Lihat Portofolio Resep</button>
+            <button class="btn btn-outline" onclick="navigateTo('kontak')">Hubungi Saya</button>
+          </div>
+        </div>
+        <div class="hero-visual" id="display-initials">LS</div>
+      </div>
+    </section>
+
+    <!-- HALAMAN 2: TENTANG & KEAHLIAN -->
+    <section id="page-tentang" class="page-section">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Tentang <span class="highlight">Saya</span></h1>
+          <p class="page-subtitle">Profil singkat dan keahlian di bidang kuliner dan memasak.</p>
+        </div>
+      </div>
+
+      <div class="edit-panel">
+        <h3>✏️ Edit Cerita Bio & Tambah Keahlian</h3>
+        <div class="form-grid">
+          <form onsubmit="saveBioData(event)">
+            <div class="form-group">
+              <label>Cerita Tentang Saya</label>
+              <textarea id="input-bio" rows="4" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-sm">Simpan Bio</button>
+          </form>
+
+          <form onsubmit="addSkillData(event)">
+            <div class="form-group">
+              <label>Nama Keahlian Baru (cth: Pastry & Baking)</label>
+              <input type="text" id="input-skill-name" placeholder="Nama skill..." required>
+            </div>
+            <div class="form-group">
+              <label>Tingkat Penguasaan (1 - 100%)</label>
+              <input type="number" id="input-skill-level" min="1" max="100" value="85" required>
+            </div>
+            <button type="submit" class="btn btn-sm">+ Tambah Keahlian</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="about-grid">
+        <div class="bio-box">
+          <h3 style="margin-bottom: 1rem;">Profil & Latar Belakang</h3>
+          <p id="display-bio"></p>
+          <button class="btn btn-sm btn-outline" onclick="navigateTo('layanan')">Lihat Layanan Kuliner &rarr;</button>
+        </div>
+
+        <div>
+          <h3 style="margin-bottom: 1rem;">Keahlian Kuliner</h3>
+          <div class="skills-container" id="skills-list"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HALAMAN 3: PROYEK / GALERI RESEP -->
+    <section id="page-proyek" class="page-section">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Galeri <span class="highlight">Resep & Kuliner</span></h1>
+          <p class="page-subtitle">Kumpulan menu masakan, kue, dan kreasi kuliner andalan.</p>
+        </div>
+      </div>
+
+      <div class="edit-panel">
+        <h3>➕ Tambah Menu Resep Baru (Dengan Foto)</h3>
+        <form onsubmit="addProjectData(event)">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Judul Menu / Masakan</label>
+              <input type="text" id="input-proj-title" placeholder="Contoh: Rendang Spesial Nusantara" required>
+            </div>
+            <div class="form-group">
+              <label>Link / URL Foto Makanan</label>
+              <input type="url" id="input-proj-image" placeholder="https://images.unsplash.com/..." required>
+            </div>
+            <div class="form-group">
+              <label>Kategori / Tag (pisahkan koma)</label>
+              <input type="text" id="input-proj-tags" placeholder="Makanan Utama, Pedas" required>
+            </div>
+            <div class="form-group">
+              <label>Link Resep / Video (opsional)</label>
+              <input type="url" id="input-proj-link" placeholder="https://youtube.com/...">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Deskripsi / Catatan Resep</label>
+            <textarea id="input-proj-desc" rows="2" placeholder="Jelaskan cita rasa atau keunikan menu ini..." required></textarea>
+          </div>
+          <button type="submit" class="btn btn-sm">+ Tambahkan ke Galeri Resep</button>
+        </form>
+      </div>
+
+      <div class="projects-grid" id="projects-list"></div>
+    </section>
+
+    <!-- HALAMAN 4: LAYANAN -->
+    <section id="page-layanan" class="page-section">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Layanan <span class="highlight">Kuliner</span></h1>
+          <p class="page-subtitle">Jasa kuliner dan katering yang ditawarkan.</p>
+        </div>
+      </div>
+
+      <div class="edit-panel">
+        <h3>➕ Tambah Layanan Baru</h3>
+        <form onsubmit="addServiceData(event)">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Judul Layanan Baru</label>
+              <input type="text" id="input-srv-title" placeholder="Contoh: Katering Harian & Bekal" required>
+            </div>
+            <div class="form-group">
+              <label>Deskripsi Layanan</label>
+              <input type="text" id="input-srv-desc" placeholder="Detail layanan makanan..." required>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-sm">+ Tambah Layanan</button>
+        </form>
+      </div>
+
+      <h3 style="margin-bottom: 1.2rem;">Layanan Utama</h3>
+      <div class="services-grid" id="services-list"></div>
+    </section>
+
+    <!-- HALAMAN 5: KONTAK & PESAN -->
+    <section id="page-kontak" class="page-section">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Hubungi <span class="highlight">Saya</span></h1>
+          <p class="page-subtitle">Silakan kirimkan pesan atau pertanyaan untuk pemesanan dan kolaborasi kuliner.</p>
+        </div>
+      </div>
+
+      <div class="edit-panel">
+        <h3>✏️ Edit Informasi Kontak Pribadi</h3>
+        <form onsubmit="saveContactInfo(event)">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Email</label>
+              <input type="email" id="input-contact-email" required>
+            </div>
+            <div class="form-group">
+              <label>Lokasi / Kota</label>
+              <input type="text" id="input-contact-city" required>
+            </div>
+            <div class="form-group">
+              <label>Media Sosial / Instagram</label>
+              <input type="text" id="input-contact-social" required>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-sm">Simpan Info Kontak</button>
+        </form>
+      </div>
+
+      <div class="contact-wrapper">
+        <div>
+          <div class="contact-card">
+            <div class="contact-info-item">
+              <h4>Email</h4>
+              <p id="display-contact-email" style="color: var(--text-muted);"></p>
+            </div>
+            <div class="contact-info-item">
+              <h4>Lokasi</h4>
+              <p id="display-contact-city" style="color: var(--text-muted);"></p>
+            </div>
+            <div class="contact-info-item">
+              <h4>Media Sosial</h4>
+              <p id="display-contact-social" style="color: var(--text-muted);"></p>
+            </div>
+          </div>
+
+          <div class="message-list">
+            <h4 style="margin-bottom: 0.8rem; color: var(--primary-color);">Kotak Masuk Pengunjung (<span id="msg-count">0</span>)</h4>
+            <div id="inbox-list"></div>
+          </div>
+        </div>
+
+        <form class="contact-card" onsubmit="submitVisitorMessage(event)">
+          <h3 style="margin-bottom: 1.2rem;">Kirim Pesan Langsung</h3>
+          <div class="form-group">
+            <label for="visitor-name">Nama Anda</label>
+            <input type="text" id="visitor-name" placeholder="Masukkan nama lengkap" required>
+          </div>
+          <div class="form-group">
+            <label for="visitor-email">Alamat Email</label>
+            <input type="email" id="visitor-email" placeholder="nama@email.com" required>
+          </div>
+          <div class="form-group">
+            <label for="visitor-msg">Isi Pesan</label>
+            <textarea id="visitor-msg" rows="5" placeholder="Tuliskan detail pesanan atau pertanyaan Anda..." required></textarea>
+          </div>
+          <button type="submit" class="btn" style="width: 100%;">Kirim Pesan Sekarang</button>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <div id="toast" class="toast">Data berhasil disimpan!</div>
+
+  <footer>
+    <p>&copy; 2026 <span id="footer-name">Lia Sihombing</span>. Dibangun dengan HTML5 & CSS Native (Data Tersimpan Otomatis di Browser).</p>
+  </footer>
+
+  <!-- JAVASCRIPT -->
+  <script>
+    const STORAGE_KEY = 'portofolio_native_data_v5';
+
+    const defaultData = {
+      logo: 'Lia.Kitchen',
+      name: 'Lia Sihombing',
+      badge: 'Kreator Konten Kuliner & Home Cook',
+      tagline: 'Seorang pencinta kuliner dan home cook yang berfokus menyajikan resep lezat, mudah dipraktikkan, dan penuh cita rasa autentik.',
+      bio: 'Saya adalah juru masak rumahan dan kreator konten kuliner berbasis di Bandung yang bersemangat mengeksplorasi aneka resep masakan nusantara maupun modern.\n\nAnda dapat mengklik tombol "Mode Input Data" di pojok kanan atas untuk mengubah seluruh teks, menambah menu resep beserta fotonya, skill memasak, dan layanan katering langsung dari browser Anda.',
+      skills: [
+        { name: 'Pengolahan Bumbu & Rempah', level: 95 },
+        { name: 'Teknik Baking & Pastry', level: 88 },
+        { name: 'Food Styling & Plating', level: 85 },
+        { name: 'Pembuatan Konten Resep Video', level: 90 }
+      ],
+      projects: [
+        {
+          title: 'Ayam Bakar Rempah Madu',
+          desc: 'Resep andalan ayam bakar dengan olesan bumbu rempah pilihan dan madu asli yang meresap sempurna hingga ke tulang.',
+          tags: ['Makanan Utama', 'Rempah', 'Bakar'],
+          link: 'https://example.com',
+          image: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=600&auto=format&fit=crop&q=60'
+        },
+        {
+          title: 'Kue Brownies Fudge Lumer',
+          desc: 'Kue cokelat panggang dengan tekstur lembut di dalam, crust mengkilap di atas, dan lelehan cokelat premium.',
+          tags: ['Dessert', 'Baking', 'Cokelat'],
+          link: 'https://example.com',
+          image: 'https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=600&auto=format&fit=crop&q=60'
+        },
+        {
+          title: 'Sup Buntut Sapi Kuah Segar',
+          desc: 'Hidangan sup hangat berkaldu sapi gurih dengan potongan sayuran segar dan taburan bawang goreng renyah.',
+          tags: ['Sup', 'Tradisional', 'Hangat'],
+          link: 'https://example.com',
+          image: 'https://images.unsplash.com/photo-1547592166-23ac45744acd?w=600&auto=format&fit=crop&q=60'
+        }
+      ],
+      services: [
+        { title: '01. Katering Harian & Bekal', desc: 'Menyediakan paket makan rumahan yang higienis, sehat, dan bergizi tinggi untuk kebutuhan harian Anda.' },
+        { title: '02. Pembuatan Konten Resep', desc: 'Membuat video tutorial memasak estetik dan praktis untuk platform Reels, TikTok, atau YouTube.' },
+        { title: '03. Pesanan Kue & Snack Box', desc: 'Menerima pesanan aneka kue basah, kue kering, dan kudapan lezat untuk berbagai acara spesial.' }
+      ],
+      contact: {
+        email: 'Liaashmbg@gmail.com',
+        city: 'Bandung, Jawa Barat, Indonesia',
+        social: 'Instagram: @Liaaxxxx'
+      },
+      messages: [
+        { sender: 'Rina Wijaya', email: 'rina@contoh.com', text: 'Halo Kak Lia, apakah menerima pesanan snack box untuk acara ulang tahun bulan depan?', date: 'Hari ini' }
+      ]
+    };
+
+    let appData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || JSON.parse(JSON.stringify(defaultData));
+
+    function saveData() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+    }
+
+    function showToast(message = "Data berhasil disimpan!") {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.classList.add('show');
+      setTimeout(() => { toast.classList.remove('show'); }, 3000);
+    }
+
+    function navigateTo(targetId) {
+      document.querySelectorAll('.page-section').forEach(sec => sec.classList.remove('active'));
+      document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+
+      document.getElementById('page-' + targetId).classList.add('active');
+      const activeBtn = document.querySelector(`.nav-btn[data-target="${targetId}"]`);
+      if (activeBtn) activeBtn.classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function toggleEditMode() {
+      document.body.classList.toggle('edit-mode');
+      const btn = document.getElementById('toggle-edit-btn');
+      if (document.body.classList.contains('edit-mode')) {
+        btn.textContent = '🔒 Selesai Edit';
+        btn.classList.remove('btn-outline');
+      } else {
+        btn.textContent = '✏️ Mode Input Data';
+        btn.classList.add('btn-outline');
+      }
+    }
+
+    function renderAll() {
+      // Beranda
+      document.getElementById('nav-logo').textContent = appData.logo;
+      document.getElementById('display-name').textContent = appData.name;
+      document.getElementById('footer-name').textContent = appData.name;
+      document.getElementById('display-badge').textContent = appData.badge;
+      document.getElementById('display-tagline').textContent = appData.tagline;
+
+      const initials = appData.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+      document.getElementById('display-initials').textContent = initials || 'LS';
+
+      document.getElementById('input-logo').value = appData.logo;
+      document.getElementById('input-name').value = appData.name;
+      document.getElementById('input-badge').value = appData.badge;
+      document.getElementById('input-tagline').value = appData.tagline;
+
+      // Tentang & Keahlian
+      document.getElementById('display-bio').textContent = appData.bio;
+      document.getElementById('input-bio').value = appData.bio;
+
+      const skillsList = document.getElementById('skills-list');
+      skillsList.innerHTML = appData.skills.map((s, idx) => `
+        <div class="skill-item">
+          <div class="skill-info">
+            <span>${s.name}</span>
+            <div style="display:flex; align-items:center; gap:0.6rem;">
+              <span style="color: var(--primary-color);">${s.level}%</span>
+              <span class="delete-btn-wrapper">
+                <button class="btn btn-sm btn-danger" style="padding: 0.2rem 0.5rem;" onclick="deleteSkill(${idx})">Hapus</button>
+              </span>
+            </div>
+          </div>
+          <div class="progress-bar">
+            <div class="progress" style="width: ${s.level}%;"></div>
+          </div>
+        </div>
+      `).join('');
+
+      // Proyek / Resep
+      const projectsList = document.getElementById('projects-list');
+      projectsList.innerHTML = appData.projects.map((p, idx) => `
+        <div class="card">
+          <div class="card-banner">
+            <img src="${p.image}" alt="${p.title}" onerror="this.src='https://via.placeholder.com/600x360?text=Foto+Menu'">
+          </div>
+          <div class="card-body">
+            <h3>${p.title}</h3>
+            <p>${p.desc}</p>
+            <div class="tags">
+              ${p.tags.map(t => `<span class="tag">${t.trim()}</span>`).join('')}
+            </div>
+            <div class="card-footer">
+              <a href="${p.link || '#'}" target="_blank" style="color: var(--primary-color); font-size: 0.9rem; font-weight: 600;">Lihat Resep &rarr;</a>
+              <span class="delete-btn-wrapper">
+                <button class="btn btn-sm btn-danger" onclick="deleteProject(${idx})">Hapus</button>
+              </span>
+            </div>
+          </div>
+        </div>
+      `).join('');
+
+      // Layanan
+      const servicesList = document.getElementById('services-list');
+      servicesList.innerHTML = appData.services.map((srv, idx) => `
+        <div class="service-box">
+          <div>
+            <h3>${srv.title}</h3>
+            <p>${srv.desc}</p>
+          </div>
+          <div class="delete-btn-wrapper" style="margin-top: 1rem;">
+            <button class="btn btn-sm btn-danger" onclick="deleteService(${idx})">Hapus Layanan</button>
+          </div>
+        </div>
+      `).join('');
+
+      // Kontak & Pesan
+      document.getElementById('display-contact-email').textContent = appData.contact.email;
+      document.getElementById('display-contact-city').textContent = appData.contact.city;
+      document.getElementById('display-contact-social').textContent = appData.contact.social;
+
+      document.getElementById('input-contact-email').value = appData.contact.email;
+      document.getElementById('input-contact-city').value = appData.contact.city;
+      document.getElementById('input-contact-social').value = appData.contact.social;
+
+      document.getElementById('msg-count').textContent = appData.messages.length;
+      const inboxList = document.getElementById('inbox-list');
+      inboxList.innerHTML = appData.messages.map((m, idx) => `
+        <div class="message-item">
+          <div class="message-meta">
+            <span>${m.sender} (${m.email})</span>
+            <span>${m.date}</span>
+          </div>
+          <p style="font-size: 0.9rem; color: var(--text-muted);">${m.text}</p>
+          <div class="delete-btn-wrapper" style="margin-top: 0.6rem;">
+            <button class="btn btn-sm btn-danger" onclick="deleteMessage(${idx})">Hapus Pesan</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Handlers Form
+    function saveHeroData(e) {
+      e.preventDefault();
+      appData.logo = document.getElementById('input-logo').value;
+      appData.name = document.getElementById('input-name').value;
+      appData.badge = document.getElementById('input-badge').value;
+      appData.tagline = document.getElementById('input-tagline').value;
+      saveData(); renderAll(); showToast('Profil beranda diperbarui!');
+    }
+
+    function saveBioData(e) {
+      e.preventDefault();
+      appData.bio = document.getElementById('input-bio').value;
+      saveData(); renderAll(); showToast('Cerita bio diperbarui!');
+    }
+
+    function addSkillData(e) {
+      e.preventDefault();
+      const name = document.getElementById('input-skill-name').value;
+      const level = document.getElementById('input-skill-level').value;
+      appData.skills.push({ name, level });
+      e.target.reset();
+      saveData(); renderAll(); showToast('Keahlian ditambahkan!');
+    }
+
+    function deleteSkill(idx) {
+      appData.skills.splice(idx, 1);
+      saveData(); renderAll(); showToast('Keahlian dihapus.');
+    }
+
+    function addProjectData(e) {
+      e.preventDefault();
+      const title = document.getElementById('input-proj-title').value;
+      const image = document.getElementById('input-proj-image').value;
+      const tags = document.getElementById('input-proj-tags').value.split(',');
+      const link = document.getElementById('input-proj-link').value;
+      const desc = document.getElementById('input-proj-desc').value;
+      appData.projects.unshift({ title, image, tags, link, desc });
+      e.target.reset();
+      saveData(); renderAll(); showToast('Menu resep baru ditambahkan!');
+    }
+
+    function deleteProject(idx) {
+      appData.projects.splice(idx, 1);
+      saveData(); renderAll(); showToast('Menu resep dihapus.');
+    }
+
+    function addServiceData(e) {
+      e.preventDefault();
+      const title = document.getElementById('input-srv-title').value;
+      const desc = document.getElementById('input-srv-desc').value;
+      appData.services.push({ title, desc });
+      e.target.reset();
+      saveData(); renderAll(); showToast('Layanan baru ditambahkan!');
+    }
+
+    function deleteService(idx) {
+      appData.services.splice(idx, 1);
+      saveData(); renderAll(); showToast('Layanan dihapus.');
+    }
+
+    function saveContactInfo(e) {
+      e.preventDefault();
+      appData.contact.email = document.getElementById('input-contact-email').value;
+      appData.contact.city = document.getElementById('input-contact-city').value;
+      appData.contact.social = document.getElementById('input-contact-social').value;
+      saveData(); renderAll(); showToast('Info kontak diperbarui!');
+    }
+
+    function submitVisitorMessage(e) {
+      e.preventDefault();
+      const sender = document.getElementById('visitor-name').value;
+      const email = document.getElementById('visitor-email').value;
+      const text = document.getElementById('visitor-msg').value;
+      appData.messages.unshift({ sender, email, text, date: 'Baru saja' });
+      e.target.reset();
+      saveData(); renderAll(); showToast('Pesan Anda terkirim!');
+    }
+
+    function deleteMessage(idx) {
+      appData.messages.splice(idx, 1);
+      saveData(); renderAll(); showToast('Pesan dihapus.');
+    }
+
+    function resetDefaultData() {
+      if (confirm('Kembalikan semua data ke pengaturan awal?')) {
+        appData = JSON.parse(JSON.stringify(defaultData));
+        saveData(); renderAll(); showToast('Data dikembalikan ke awal.');
+      }
+    }
+
+    // Inisialisasi awal
+    renderAll();
+  </script>
+</body>
+</html>
